@@ -24,8 +24,34 @@ try {
   throw new Error('Invalid FRONTEND_URL configuration. Provide a valid URL.');
 }
 
-export  const env = {
+const mongodbUri = process.env.MONGODB_URI?.trim();
+
+if (!mongodbUri) {
+  throw new Error('Missing required MONGODB_URI configuration. Set it in your .env file.');
+}
+
+const mongoSchemeMatch = mongodbUri.match(/^(mongodb(?:\+srv)?):\/\//i);
+
+if (!mongoSchemeMatch) {
+  throw new Error('Invalid MONGODB_URI configuration. Expected a mongodb:// or mongodb+srv:// URI.');
+}
+
+const protocol = `${mongoSchemeMatch[1].toLowerCase()}:`;
+const isSrvUri = protocol === 'mongodb+srv:';
+const authority = mongodbUri.slice(mongoSchemeMatch[0].length).split(/[/?#]/, 1)[0];
+const hosts = authority.slice(authority.lastIndexOf('@') + 1);
+
+if (!hosts) {
+  throw new Error('Invalid MONGODB_URI configuration. Check that it is a complete MongoDB connection URI.');
+}
+
+if (isSrvUri && hosts.includes(':')) {
+  throw new Error('Invalid MONGODB_URI configuration. mongodb+srv:// URIs must not specify a port.');
+}
+
+export const env = {
   port,
   nodeEnv,
   frontendUrl,
+  mongodbUri,
 };
