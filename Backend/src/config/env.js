@@ -24,7 +24,7 @@ try {
   throw new Error('Invalid FRONTEND_URL configuration. Provide a valid URL.');
 }
 
-export const env = {
+export  const env = {
   port,
   nodeEnv,
   frontendUrl,
