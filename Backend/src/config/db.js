@@ -6,8 +6,11 @@ export async function connectToDatabase() {
     await mongoose.connect(env.mongodbUri);
     console.log('Connected to MongoDB successfully.');
   } catch (error) {
-    // Do not log the connection error: driver messages may contain the URI.
-    throw new Error('Could not connect to MongoDB. Check the database configuration and network access.');
+      // Do not log the connection error: driver messages may contain the URI.
+      throw new Error(
+          'Could not connect to MongoDB. Check the database configuration and network access.',
+          { cause: error }
+        );
   }
 }
 

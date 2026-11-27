@@ -26,7 +26,6 @@ async function shutdown(exitCode = 0) {
   isShuttingDown = true;
 
   console.log('Shutting down gracefully...');
-
   try {
     if (httpServer?.listening) {
       await new Promise((resolve, reject) => {
